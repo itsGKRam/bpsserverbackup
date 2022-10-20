@@ -1,0 +1,50 @@
+{
+    "name": "buspasssystem",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src",
+    "private": "true",
+    "scripts": {
+        "dev:backend": "yarn workspace @buspasssystem/backend dev",
+        "dev:frontend": "yarn workspace @buspasssystem/frontend  dev",
+        "dev": "concurrently \"yarn dev:backend\" \"yarn dev:frontend\" ",
+        "pretty": "prettier --write ./src/**/*.ts",
+        "configure-husky": "npx husky install && npx husky add .husky/pre-commit \"npx --no-install lint-staged\""
+    },
+    "author": "",
+    "license": "ISC",
+    "workspaces": [
+        "src/packages/*"
+    ],
+    "devDependencies": {
+        "concurrently": "^7.4.0",
+        "eslint": "^8.25.0",
+        "eslint-config-prettier": "^8.5.0",
+        "husky": "^8.0.1",
+        "kill-port": "^2.0.1",
+        "lint-staged": "^13.0.3",
+        "prettier": "^2.7.1"
+    },
+    "lint-staged": {
+        "**/*.{js,json,ts,css}": [
+            "prettier --write"
+        ]
+    },
+    "dependencies": {
+        "eslint-plugin-react": "^7.31.10"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nagasaiabhinay/BusPassSystem.git"
+    },
+    "keywords": [],
+    "bugs": {
+        "url": "https://github.com/nagasaiabhinay/BusPassSystem/issues"
+    },
+    "homepage": "https://github.com/nagasaiabhinay/BusPassSystem#readme"
+}
