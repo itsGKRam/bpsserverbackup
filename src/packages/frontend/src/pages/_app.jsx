@@ -2,9 +2,10 @@ import Axios from '@axios/index';
 import { ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
+import '@styles/globals.css';
 import Head from 'next/head';
 import React from 'react';
-import '../styles/globals.css';
+import { SWRConfig } from 'swr';
 
 function MyApp({ Component, pageProps }) {
     const [colorScheme, setColorScheme] = React.useState('dark');

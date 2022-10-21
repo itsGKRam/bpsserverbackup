@@ -10,7 +10,8 @@
         "paths": {
             "@store/*": ["./src/config/store/*"],
             "@components/*": ["./src/components/*"],
-            "@axios/*": ["./src/config/axios/*"]
+            "@axios/*": ["./src/config/axios/*"],
+            "@styles/*": ["./src/styles/*"]
         }
     },
     "exclude": ["node_modules", "**/node_modules/*"]
