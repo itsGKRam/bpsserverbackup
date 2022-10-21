@@ -11,7 +11,9 @@
             "@store/*": ["./src/config/store/*"],
             "@components/*": ["./src/components/*"],
             "@axios/*": ["./src/config/axios/*"],
-            "@styles/*": ["./src/styles/*"]
+            "@validations/*": ["./src/config/validations/*"],
+            "@styles/*": ["./src/styles/*"],
+            "@layouts/*": ["./src/components/layouts/*"]
         }
     },
     "exclude": ["node_modules", "**/node_modules/*"]
