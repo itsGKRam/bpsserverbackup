@@ -6,7 +6,11 @@
         "jsx": "react-jsx",
         "strictNullChecks": true,
         "strictFunctionTypes": true,
-        "baseUrl": "."
+        "baseUrl": ".",
+        "paths": {
+            "@store/*": ["./src/config/store/*"],
+            "@components/*": ["./src/components/*"]
+        }
     },
     "exclude": ["node_modules", "**/node_modules/*"]
 }
