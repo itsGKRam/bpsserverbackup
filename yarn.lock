@@ -221,6 +221,7 @@
   "version" "0.1.0"
   dependencies:
     "@emotion/react" "^11.10.4"
+    "@emotion/styled" "^11.10.4"
     "@mantine/carousel" "^5.6.0"
     "@mantine/core" "^5.6.0"
     "@mantine/dates" "^5.6.0"
@@ -228,6 +229,7 @@
     "@mantine/form" "^5.6.0"
     "@mantine/hooks" "^5.6.0"
     "@mantine/modals" "^5.6.0"
+    "@mantine/next" "^5.6.0"
     "@mantine/notifications" "^5.6.0"
     "@mantine/nprogress" "^5.6.0"
     "@mantine/prism" "^5.6.0"
@@ -2945,7 +2947,7 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-"react@^16 || ^17 || ^18", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18.0.0", "react@^16.x || 17.x || 18.x", "react@^17.0.2 || ^18.0.0-0", "react@^18.1.0", "react@^18.2.0", "react@>= 16.8 || 18.0.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", "react@>=0.14.9", "react@>=16.6.0", "react@>=16.8.0", "react@0.14 || 15 || 16 || 17 || 18", "react@18.2.0":
+"react@^16 || ^17 || ^18", "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18.0.0", "react@^16.x || 17.x || 18.x", "react@^17.0.2 || ^18.0.0-0", "react@^18.1.0", "react@^18.2.0", "react@>= 16.8 || 18.0.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", "react@>=0.14.9", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0", "react@0.14 || 15 || 16 || 17 || 18", "react@18.2.0":
   "integrity" "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ=="
   "resolved" "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   "version" "18.2.0"
@@ -3641,3 +3643,10 @@
   "integrity" "sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q=="
   "resolved" "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
   "version" "0.1.0"
+
+"zustand@^4.1.2":
+  "integrity" "sha512-gcRaKchcxFPbImrBb/BKgujOhHhik9YhVpIeP87ETT7uokEe2Szu7KkuZ9ghjtD+/KKkcrRNktR2AiLXPIbKIQ=="
+  "resolved" "https://registry.npmjs.org/zustand/-/zustand-4.1.2.tgz"
+  "version" "4.1.2"
+  dependencies:
+    "use-sync-external-store" "1.2.0"
