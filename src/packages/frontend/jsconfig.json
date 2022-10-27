@@ -13,7 +13,8 @@
             "@axios/*": ["./src/config/axios/*"],
             "@validations/*": ["./src/config/validations/*"],
             "@styles/*": ["./src/styles/*"],
-            "@layouts/*": ["./src/components/layouts/*"]
+            "@layouts/*": ["./src/components/layouts/*"],
+            "@hooks/*": ["./src/hooks/*"]
         }
     },
     "exclude": ["node_modules", "**/node_modules/*"]

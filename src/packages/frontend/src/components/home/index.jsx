@@ -1,5 +1,12 @@
+import { Divider, Title } from '@mantine/core';
+
 function Home() {
-    return <div>Home</div>;
+    return (
+        <div className=' bps-h-full bps-flex bps-flex-col bps-gap-3'>
+            <Title align='center'>Cloud Based BusPass System</Title>
+            <Divider className=' bps-w-full' />
+        </div>
+    );
 }
 
 export default Home;

@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
                 />
             </div>
             <div
-                className={`bps-w-full  bps-h-full bps-overflow-hidden  ${
+                className={`bps-w-full bps-h-full bps-overflow-hidden  ${
                     !isOpen &&
                     'bps-hidden lg:bps-block bps-transition-all lg:bps-w-5/6 lg:bps-h-full'
                 }`}

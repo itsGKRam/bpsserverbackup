@@ -1,6 +1,14 @@
 import Logo from '@components/common/logo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import {
+    Bus,
+    CircleWavyCheck,
+    Door,
+    HouseLine,
+    Ticket,
+    User,
+} from 'phosphor-react';
 
 const SideBarIcon = (props) => {
     const router = useRouter();
@@ -18,10 +26,11 @@ const SideBarIcon = (props) => {
     const active = menu[1] === propsData.route || menu.length === 1;
 
     return (
-        <div>
+        <div key={propsData.key}>
             <Link
                 href={`${propsData?.route === '' ? '/' : propsData?.route}`}
                 key={propsData?.key}
+                className='bps-text-white bps-no-underline'
             >
                 <div
                     className={` bps-flex bps-w-min bps-flex-row bps-gap-4 ${
@@ -55,25 +64,51 @@ export default function RootLayoutSidebar(props) {
 
     const SidebarMenu = [
         {
-            title: 'Dashboard',
+            title: 'Admin',
+            route: 'admin',
+            icon: CircleWavyCheck,
+        },
+        {
+            title: 'Home',
             route: '',
+            icon: HouseLine,
         },
         {
-            title: 'Store',
-            route: 'store',
+            title: 'Create Pass',
+            route: 'create-pass',
+            icon: Ticket,
         },
         {
-            title: 'Create',
-            route: 'create',
+            title: 'My Rides',
+            route: 'rides',
+            icon: Bus,
         },
+        // {
+        //     title: 'My Wallet',
+        //     route: 'wallet',
+        // },
+        // {
+        //     title: 'Referrals',
+        //     route: 'referrals',
+        // },
         {
-            title: 'Logs',
-            route: 'logs',
+            title: 'Profile',
+            route: 'profile',
+            icon: User,
         },
-        {
-            title: 'Services',
-            route: 'services',
-        },
+
+        // {
+        //     title: 'Terms and Conditions',
+        //     route: 'terms-and-conditions',
+        // },
+        // {
+        //     title: 'Privacy Policy',
+        //     route: 'privacy-policy',
+        // },
+        // {
+        //     title: 'FAQ & Support',
+        //     route: 'faq-and-support',
+        // },
     ];
 
     return (
@@ -120,25 +155,27 @@ export default function RootLayoutSidebar(props) {
                             >
                                 {SidebarMenu?.map((_, i) => (
                                     <SideBarIcon
-                                        key={i}
+                                        key={_?.title}
                                         isOpen={propsData?.isOpen}
                                         {..._}
                                     />
                                 ))}
                             </div>
-
-                            <div
-                                className={` bps-w-full ${
-                                    propsData?.isOpen &&
-                                    ' bps-shadow-none !bps-bg-transparent bps-p-0'
-                                } bps-shadow-lg bps-flex bps-items-center bps-justify-center bps-p-2 bps-rounded-md bps-cursor-pointer`}
-                            >
-                                <SideBarIcon
-                                    key={'Log-out'}
-                                    isOpen={propsData?.isOpen}
-                                    title='Log-out'
-                                    route='/'
-                                />
+                            <div>
+                                <div
+                                    className={` bps-w-full ${
+                                        propsData?.isOpen &&
+                                        ' bps-shadow-none !bps-bg-transparent bps-p-0'
+                                    } bps-shadow-lg bps-flex bps-items-center bps-justify-center bps-p-2 bps-rounded-md bps-cursor-pointer`}
+                                >
+                                    <SideBarIcon
+                                        key={'Log-out'}
+                                        isOpen={propsData?.isOpen}
+                                        title='Log-out'
+                                        route='/'
+                                        icon={Door}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
