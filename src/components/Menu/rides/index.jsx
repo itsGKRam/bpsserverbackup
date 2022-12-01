@@ -15,7 +15,7 @@ const Rides = () => {
                     <Title>Rides</Title>
                     <Divider className=' bps-w-full' />
                 </div>
-                <SimpleGrid cols={2} p='3'>
+                <SimpleGrid cols={4} p='3'>
                     {data &&
                         data?.passes?.map((_, i) => (
                             <PassCard key={i} item={_} />

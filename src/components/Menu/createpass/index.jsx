@@ -1,21 +1,22 @@
 import Axios from '@axios/index';
 import { passCategories, passTypes } from '@components/common/staticData';
-import { Button, Card, Divider, Select, Text, Title } from '@mantine/core';
+import { Card, Divider, Select, Text, Title } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
+import { useId } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
+import { useGlobalStore } from '@store/index';
 import React from 'react';
+import StripeCheckout from 'react-stripe-checkout';
 import useSWR from 'swr';
 
 export default function CreatePass() {
     const RegionData = useSWR('/auth/regions/get-all-regions');
     const RoutesData = useSWR('/auth/routes/get-all-routes');
+    const user = useGlobalStore((state) => state.user);
 
-    const [selectedRoute, setSelectedRoute] = React.useState({});
-    console.log(
-        '🚀 ~ file: index.jsx ~ line 15 ~ CreatePass ~ selectedRoute',
-        selectedRoute,
-    );
+    const uuid = useId();
+    const [selectedRoute, setSelectedRoute] = React.useState([]);
 
     const createPassForm = useForm({
         initialValues: {
@@ -67,15 +68,103 @@ export default function CreatePass() {
             return data;
         },
     });
+    const handleToken = async (token) => {
+        const res = {
+            data: {
+                status: true,
+                paymentId: uuid,
+            },
+        };
+        const { status, paymentID } = res.data;
+        if (status) {
+            showNotification({
+                title: 'Success',
+                message: 'We are Creating your pass',
+            });
 
-    const HandleCreatePass = async (e) => {
-        console.log(e);
-        const api = Axios.init();
-        const { data } = await api.auth.createNewPass(e);
-        createPassForm.reset();
-        showNotification({
-            message: data?.message,
-        });
+            let tempData = {
+                category: createPassForm.values.passCategory,
+                startDate: createPassForm.values.passStartDate,
+                endDate: new Date(
+                    createPassForm.values.passStartDate.getTime() +
+                        1000 *
+                            60 *
+                            60 *
+                            24 *
+                            passTypes.find(
+                                (item) =>
+                                    item.value ===
+                                    createPassForm.values.passType,
+                            ).days,
+                ),
+                passType: createPassForm.values.passType,
+            };
+
+            if (createPassForm.values.passCategory === 'a2b') {
+                tempData = {
+                    ...tempData,
+                    details: {
+                        passFrom: createPassForm.values.passFrom,
+                        passTo: createPassForm.values.passTo,
+                    },
+                };
+            }
+
+            if (createPassForm.values.passCategory === 'region') {
+                tempData = {
+                    ...tempData,
+                    details: {
+                        passRegion: createPassForm.values.passRegion,
+                    },
+                };
+            }
+            const ee = {
+                paymentID: uuid,
+                ...tempData,
+            };
+            const api = Axios.init();
+            const { data } = await api.auth.createNewPass(ee);
+            createPassForm.reset();
+            showNotification({
+                message: data?.message,
+            });
+        } else {
+            showNotification({
+                title: 'Error',
+                message: 'Something went wrong',
+            });
+        }
+    };
+
+    React.useEffect(() => {
+        setSelectedRoute([]);
+        createPassForm.setFieldValue('passFrom', '');
+        createPassForm.setFieldValue('passTo', '');
+        createPassForm.setFieldValue('passRegion', '');
+    }, [createPassForm.values.passCategory]);
+
+    React.useEffect(() => {
+        createPassForm.setFieldValue(
+            'expiryDate',
+            new Date(
+                new Date(createPassForm.values.passStartDate).getTime() +
+                    1000 *
+                        60 *
+                        60 *
+                        24 *
+                        passTypes.find(
+                            (item) =>
+                                item.value === createPassForm.values.passType,
+                        ).days,
+            ),
+        );
+    }, [createPassForm.values.passType]);
+
+    const getDaysBetweenDates = (startDate, endDate) => {
+        const Start = new Date(startDate).getTime();
+        const End = new Date(endDate).getTime();
+        const Difference = End - Start;
+        return Difference / (1000 * 3600 * 24);
     };
 
     return (
@@ -85,9 +174,11 @@ export default function CreatePass() {
             <div className=' bps-h-full bps-w-full bps-flex bps-flex-col lg:bps-flex-row bps-gap-3'>
                 <Card className=' bps-w-full lg:bps-w-full bps-h-full'>
                     <form
-                        onSubmit={createPassForm.onSubmit((values) =>
-                            HandleCreatePass(values),
-                        )}
+                        onSubmit={createPassForm.onSubmit(async (values) => {
+                            showNotification({
+                                message: 'Please wait...',
+                            });
+                        })}
                         className=' bps-p-5 bps-flex bps-flex-col bps-gap-3'
                     >
                         <Select
@@ -147,7 +238,7 @@ export default function CreatePass() {
                                                   value: _.Name,
                                               }),
                                           )
-                                        : []
+                                        : ['Something went Wrong']
                                 }
                                 required
                                 searchable
@@ -155,7 +246,18 @@ export default function CreatePass() {
                                 label='Region'
                                 placeholder='Enter your region'
                                 className=' bps-w-full'
-                                {...createPassForm.getInputProps('passRegion')}
+                                onChange={(e) => {
+                                    const data =
+                                        RegionData?.data?.regions?.filter(
+                                            (_) => _.Name === e,
+                                        );
+                                    setSelectedRoute(data);
+                                    createPassForm.setFieldValue(
+                                        'passRegion',
+                                        e,
+                                    );
+                                }}
+                                error={createPassForm.errors.passRegion}
                             />
                         )}
                         <Select
@@ -206,27 +308,138 @@ export default function CreatePass() {
                         </div>
                         <div className=' bps-w-full bps-flex bps-flex-row bps-items-center bps-justify-end'>
                             <div className=' bps-text-end'>
-                                {selectedRoute.length > 0 && (
+                                {selectedRoute?.length > 0 && (
                                     <>
                                         <Text>
-                                            Per Mile {`(A)`} ={' '}
-                                            {selectedRoute[0]?.Bus?.Fare}
+                                            Number of Days {`(A)`} ={' '}
+                                            {getDaysBetweenDates(
+                                                createPassForm.values
+                                                    .passStartDate,
+                                                createPassForm.values
+                                                    .expiryDate,
+                                            )}
                                         </Text>
                                         <Text>
-                                            Total Distance {`(B)`} ={' '}
-                                            {selectedRoute[0]?.Bus?.Distance}
+                                            Per Mile {`(B)`} ={' '}
+                                            {createPassForm.values
+                                                .passCategory === 'a2b' &&
+                                                selectedRoute[0]?.Bus?.Fare}
+                                            {createPassForm.values
+                                                .passCategory === 'region' &&
+                                                selectedRoute[0]?.PerMile}
                                         </Text>
                                         <Text>
-                                            Total Amount {`(A*B)`} ={' '}
-                                            {selectedRoute[0]?.Bus?.Fare *
-                                                selectedRoute[0]?.Bus?.Distance}
+                                            {createPassForm.values
+                                                .passCategory === 'a2b' &&
+                                                `Total Distance (C) = ${selectedRoute[0]?.Bus?.Distance}`}
+
+                                            {createPassForm.values
+                                                .passCategory === 'region' &&
+                                                `Total Sq Miles (C) = ${selectedRoute[0]?.SqMiles}`}
+                                        </Text>
+                                        <Text>
+                                            Total Amount {`(AxBxC)`} ={' '}
+                                            {createPassForm.values
+                                                .passCategory === 'a2b' &&
+                                                selectedRoute[0]?.Bus?.Fare *
+                                                    selectedRoute[0]?.Bus
+                                                        ?.Distance *
+                                                    getDaysBetweenDates(
+                                                        createPassForm.values
+                                                            .passStartDate,
+                                                        createPassForm.values
+                                                            .expiryDate,
+                                                    )}
+                                            {createPassForm.values
+                                                .passCategory === 'region' &&
+                                                selectedRoute[0]?.PerMile *
+                                                    getDaysBetweenDates(
+                                                        createPassForm.values
+                                                            .passStartDate,
+                                                        createPassForm.values
+                                                            .expiryDate,
+                                                    ) *
+                                                    selectedRoute[0]?.SqMiles}
                                         </Text>
                                     </>
                                 )}
                             </div>
                         </div>
 
-                        <Button type='submit'>Pay</Button>
+                        {selectedRoute?.length > 0 && (
+                            <StripeCheckout
+                                stripeKey='pk_test_51JGNLWBVnEa8wQ1y8ZGMn9tw57qHCROwaNVr5eplb1UvQsN410gJpXPyNW8yFgNQZeM7twAoAjZ7LosccszLnDMz00pIIh0lL0'
+                                token={handleToken}
+                                label={` Pay 
+                                 ${
+                                     createPassForm.values.passCategory ===
+                                     'a2b'
+                                         ? selectedRoute[0]?.Bus?.Fare *
+                                               getDaysBetweenDates(
+                                                   createPassForm.values
+                                                       .passStartDate,
+                                                   createPassForm.values
+                                                       .expiryDate,
+                                               ) *
+                                               selectedRoute[0]?.Bus?.Distance >
+                                           0
+                                             ? selectedRoute[0]?.Bus?.Fare *
+                                               getDaysBetweenDates(
+                                                   createPassForm.values
+                                                       .passStartDate,
+                                                   createPassForm.values
+                                                       .expiryDate,
+                                               ) *
+                                               selectedRoute[0]?.Bus?.Distance
+                                             : ''
+                                         : selectedRoute[0]?.PerMile *
+                                           getDaysBetweenDates(
+                                               createPassForm.values
+                                                   .passStartDate,
+                                               createPassForm.values.expiryDate,
+                                           ) *
+                                           selectedRoute[0]?.SqMiles
+                                         ? selectedRoute[0]?.PerMile *
+                                           getDaysBetweenDates(
+                                               createPassForm.values
+                                                   .passStartDate,
+                                               createPassForm.values.expiryDate,
+                                           ) *
+                                           selectedRoute[0]?.SqMiles
+                                         : ''
+                                 }
+                            `}
+                                billingAddress={false}
+                                shippingAddress={false}
+                                email={user?.Email}
+                                amount={
+                                    parseInt(
+                                        (createPassForm.values.passCategory ===
+                                            'a2b' &&
+                                            selectedRoute[0]?.Bus?.Fare *
+                                                selectedRoute[0]?.Bus
+                                                    ?.Distance *
+                                                getDaysBetweenDates(
+                                                    createPassForm.values
+                                                        .passStartDate,
+                                                    createPassForm.values
+                                                        .expiryDate,
+                                                )) ??
+                                            (createPassForm.values
+                                                .passCategory === 'region' &&
+                                                selectedRoute[0]?.PerMile *
+                                                    getDaysBetweenDates(
+                                                        createPassForm.values
+                                                            .passStartDate,
+                                                        createPassForm.values
+                                                            .expiryDate,
+                                                    ) *
+                                                    selectedRoute[0]?.SqMiles),
+                                    ) * 100
+                                }
+                                name={user?.Name}
+                            />
+                        )}
                     </form>
                 </Card>
                 {/* <Card className=" bps-p-0 bps-relative bps-w-full  lg:bps-w-[70%] bps-h-full">

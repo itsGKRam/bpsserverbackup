@@ -1,5 +1,5 @@
 import Axios from '@axios/index';
-import { Button, TextInput } from '@mantine/core';
+import { Button, NumberInput, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 
@@ -7,6 +7,8 @@ const AdminBusRegionCreateNew = () => {
     const CreateNewRegionForm = useForm({
         initialValues: {
             Name: '',
+            PerMile: 0,
+            SqMiles: 0,
         },
         validate: {
             Name: (value) => {
@@ -42,6 +44,24 @@ const AdminBusRegionCreateNew = () => {
                     placeholder='Name'
                     className='bps-w-full'
                     {...CreateNewRegionForm.getInputProps('Name')}
+                />
+                <NumberInput
+                    label='Per Mile'
+                    required
+                    placeholder='Per Mile'
+                    className='bps-w-full'
+                    hideControls
+                    min={0}
+                    {...CreateNewRegionForm.getInputProps('PerMile')}
+                />
+                <NumberInput
+                    label='Region Size (Sq Miles)'
+                    required
+                    placeholder='Sq Miles'
+                    className='bps-w-full'
+                    hideControls
+                    min={0}
+                    {...CreateNewRegionForm.getInputProps('SqMiles')}
                 />
                 <Button type='submit' variant='outline' color='blue'>
                     Create Region
