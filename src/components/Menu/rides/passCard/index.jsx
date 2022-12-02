@@ -23,10 +23,6 @@ export default function PassCard(p) {
     );
 
     const [qrURL, setQRURL] = React.useState('');
-    console.log('====================================');
-    console.log(props?.item);
-    console.log('====================================');
-
     const active = props?.item?.passStatus === 'active';
 
     const createQR = async () => {

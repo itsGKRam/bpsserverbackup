@@ -79,7 +79,7 @@ export default function RootLayoutSidebar(props) {
             icon: Ticket,
         },
         {
-            title: 'My Rides',
+            title: 'My Passes',
             route: 'rides',
             icon: Bus,
         },
@@ -91,11 +91,11 @@ export default function RootLayoutSidebar(props) {
         //     title: 'Referrals',
         //     route: 'referrals',
         // },
-        {
-            title: 'Profile',
-            route: 'profile',
-            icon: User,
-        },
+        // {
+        //     title: 'Profile',
+        //     route: 'profile',
+        //     icon: User,
+        // },
 
         // {
         //     title: 'Terms and Conditions',

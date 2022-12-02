@@ -46,7 +46,6 @@ const TableRow = (p) => {
         key: p.key,
         item: p.item,
     };
-    console.log('🚀 ~ file: index.jsx:49 ~ TableRow ~ props', props);
 
     const CreateNewRegionForm = useForm({
         initialValues: {
